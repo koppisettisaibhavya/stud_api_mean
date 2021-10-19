@@ -6,7 +6,11 @@ app.use(cors({
 }))
 var stud=[]
 app.use(express.json())
-
+app.get("/",function(req,res){
+    res.json({
+        msg:"success"
+    })
+})
 app.post("/studadd",function(req,res)
 {
     var a=new Object()
