@@ -4,11 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
     "start": "node index.js"
-=======
-    "start":"node index.js"
->>>>>>> 135518f7733b5e073a7d8b9cda2dae8f120f7db7
   },
   "author": "",
   "license": "ISC",
