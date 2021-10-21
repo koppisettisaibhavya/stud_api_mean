@@ -4,54 +4,120 @@ const cors=require("cors")
 app.use(cors({
     origin:"*"
 }))
-var stud=[]
+//var stud=[]
+const mongodb=require("mongodb")
+const mongoclient=mongodb.MongoClient;
+console.log(mongoclient);
+const url="mongodb+srv://bhavy:bhavya2000@cluster0.0bfdg.mongodb.net/studdb?retryWrites=true&w=majority"
 app.use(express.json())
 
-app.post("/studadd",function(req,res)
-{
-    var a=new Object()
-    a.id=stud.length+1;
-    Object.keys(req.body).forEach((ele)=>{
-        a[ele]=req.body[ele];
-    })
-    stud.push(a);
+app.get("/",function(req,res){
     res.json({
         msg:"success"
     })
 })
-app.get("/studlist",function(req,res){
-    res.json(stud);
-})
-app.get("/studlist/:id",function(req,res){
-    stud.forEach((ele)=>{
-            if(ele.id==req.params.id)
-            {
-                res.json(ele);
-            }
+app.post("/studadd",async function(req,res)
+{ 
+    try{
+       
+        let conn=await mongoclient.connect(url);
+        const db=conn.db("studdb");
+        await db.collection("stud").insertOne(req.body)
+        console.log("***");
+        await conn.close()
+        res.json({
+            msg:"success"
         })
+
+    }
+    catch(err)
+    {
+        res.status(500).json({
+            msg:"error"
+        })
+    }
+   
+})
+app.get("/studlist",async function(req,res){
+    try{
+        let conn=await mongoclient.connect(url);
+        const db=conn.db("studdb");
+        let s=await db.collection("stud").find().toArray()
+        //console.log(s);
+        await conn.close()
+        res.json(s)
+
+    }
+    catch(err)
+    {
+        res.status(500).json({
+            msg:"error"
+        })
+    }
+})
+app.get("/studlist/:id",async function(req,res){
+    try{
+        let conn=await mongoclient.connect(url);
+        let db=conn.db("studdb");
+        var id=mongodb.ObjectId(req.params.id)
+        //console.log(id)
+        let s=await db.collection("stud").findOne({"_id":id})
+        //console.log(s)
+        await conn.close()
+        res.json(s)
+
+    }
+    catch(err)
+    {
+        res.status(500).json({
+            msg:"error"
+        })
+    }
     
 })
-app.put("/studlist/:id",function(req,res){
-    for(let i=0;i<stud.length;i++)
+app.put("/studlist/:id",async function(req,res){
+    //console.log("&&&&")
+    try{
+       
+        console.log(req.body)
+        let conn=await mongoclient.connect(url);
+        let db=conn.db("studdb");
+        var id=mongodb.ObjectId(req.params.id)
+        //console.log(id,req.body);
+         await db.collection("stud").updateOne({_id:id},{$set:req.body});
+        await conn.close()
+        res.json({
+            msg:"success"
+        })
+
+    }
+    catch(err)
     {
-        if(stud[i].id==req.params.id)
-        {
-            stud[i]=req.body;
-            stud[i].id=req.params.id
-            res.json({msg:"success"})
-            break;
-        }
+        res.status(500).json({
+            msg:"error"
+        })
     }
 })
-app.delete("/studlist/:id",function(req,res){
-    for(let i=0;i<stud.length;i++)
+app.delete("/studlist/:id",async function(req,res){
+    try{
+        let conn=await mongoclient.connect(url);
+        let db=conn.db("studdb");
+        var id=mongodb.ObjectId(req.params.id)
+        await db.collection("stud").deleteOne({_id:id})
+        await conn.close()
+        res.json({
+            msg:"success"
+        })
+
+    }
+    catch(err)
     {
-        if(stud[i].id==req.params.id)
-        {
-            stud.splice(i,1);
-            res.json({msg:"success"})
-            break;
-        }
+        res.status(500).json({
+            msg:"error"
+        })
     }
 })
-app.listen(3000);
+const port=process.env.PORT||'3000'
+app.listen(port,()=>{
+   console.log(`server started at ${port}`);
+});
