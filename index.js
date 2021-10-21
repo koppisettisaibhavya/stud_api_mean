@@ -16,18 +16,7 @@ app.get("/",function(req,res){
         msg:"success"
     })
 })
-app.post("/studadd",function(req,res)
-{
-    var a=new Object()
-    a.id=stud.length+1;
-    Object.keys(req.body).forEach((ele)=>{
-        a[ele]=req.body[ele];
-    })
-    stud.push(a);
-    res.json({
-        msg:"success"
-    })
-})
+
 app.post("/studadd",async function(req,res)
 { 
     try{
