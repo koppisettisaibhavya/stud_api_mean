@@ -10,10 +10,7 @@ const mongoclient=mongodb.MongoClient;
 console.log(mongoclient);
 const url="mongodb+srv://bhavy:bhavya2000@cluster0.0bfdg.mongodb.net/studdb?retryWrites=true&w=majority"
 app.use(express.json())
-<<<<<<< HEAD
 
-app.get("/",function(req,res){
-=======
 app.get("/",function(req,res){
     res.json({
         msg:"success"
@@ -27,7 +24,6 @@ app.post("/studadd",function(req,res)
         a[ele]=req.body[ele];
     })
     stud.push(a);
->>>>>>> 135518f7733b5e073a7d8b9cda2dae8f120f7db7
     res.json({
         msg:"success"
     })
@@ -136,8 +132,6 @@ app.delete("/studlist/:id",async function(req,res){
 const port=process.env.PORT||'3000'
 app.listen(port,()=>{
    console.log(`server started at ${port}`);
-<<<<<<< HEAD
+
 });
-=======
-});
->>>>>>> 135518f7733b5e073a7d8b9cda2dae8f120f7db7
+
